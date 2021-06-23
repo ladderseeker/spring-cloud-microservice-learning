@@ -15,6 +15,12 @@ public class CurrencyConversionController {
 
     private final static String uri = "http://localhost:8000/currency-exchange/from/{from}/to/{to}";
 
+    private final CurrencyExchangeProxy currencyExchangeProxy;
+
+    public CurrencyConversionController(CurrencyExchangeProxy currencyExchangeProxy) {
+        this.currencyExchangeProxy = currencyExchangeProxy;
+    }
+
     @GetMapping({"/currency-converter/from/{from}/to/{to}/quantity/{quantity}"})
     public CurrencyConversion calculateCurrencyConversion(
             @PathVariable String from,
@@ -31,6 +37,24 @@ public class CurrencyConversionController {
 
         CurrencyConversion responseBody = responseEntity.getBody();
 
+        return getCurrencyConversion(from, to, quantity, responseBody);
+    }
+
+    @GetMapping({"/currency-converter-feign/from/{from}/to/{to}/quantity/{quantity}"})
+    public CurrencyConversion calculateCurrencyConversionFeign(
+            @PathVariable String from,
+            @PathVariable String to,
+            @PathVariable BigDecimal quantity) {
+
+        CurrencyConversion responseBody = currencyExchangeProxy.retrieveExchangeValue(from, to);
+
+        CurrencyConversion currencyConversion = getCurrencyConversion(from, to, quantity, responseBody);
+        currencyConversion.setEnvironment(currencyConversion.getEnvironment() + " :feign");
+
+        return currencyConversion;
+    }
+
+    private CurrencyConversion getCurrencyConversion(String from, String to, BigDecimal quantity, CurrencyConversion responseBody) {
         CurrencyConversion currencyConversion = new CurrencyConversion();
         currencyConversion.setId(responseBody.getId());
         currencyConversion.setFrom(from);

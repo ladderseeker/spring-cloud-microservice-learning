@@ -1,4 +1,4 @@
-package com.example.currencyconversionservice;
+package com.xiao.microservices.currencyconversionservice;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

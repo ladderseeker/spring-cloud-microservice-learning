@@ -1,4 +1,4 @@
-package com.example.currencyconversionservice;
+package com.xiao.microservices.currencyconversionservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
